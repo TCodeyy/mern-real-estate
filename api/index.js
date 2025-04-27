@@ -8,16 +8,13 @@ dotenv.config()
 
 
 mongoose.connect(process.env.MONGO).then(() => {
-    console.log('connected to db');
 }).catch((err) => {
-    console.log('err', err)
 })
 const app = express()
 
 app.use(express.json())
  
 app.listen(3000,()=> {
-    console.log('Server is running on port 3000!')
 });
 
 //we are index.js to use these routes when this api is hit
