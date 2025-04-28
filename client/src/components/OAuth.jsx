@@ -16,7 +16,6 @@ const handleGoogleClick = async () => {
        const auth = getAuth(app)
 
        const result = await signInWithPopup(auth, provider)
-       console.log('result',result)
        const res = await fetch('/api/auth/google', {
         method: 'POST',
         headers:{
@@ -29,7 +28,6 @@ const handleGoogleClick = async () => {
        navigate('/')
     
     } catch (error) {
-        console.log('could not sign in with google', error)
         
     }
 }
