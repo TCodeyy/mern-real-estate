@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {useRef} from 'react'
+import {Link} from 'react-router-dom'
 import { updateUserFailure, updateUserSuccess , updateUserStart, deleteUserStart, deleteUserFailure, deleteUserSuccess, signOutUserStart, signOutUserFailure, signOutUserSuccess } from '../redux/user/userSlice'
 import { deleteUser } from 'firebase/auth'
 
@@ -105,8 +106,9 @@ const handleSignOut = async() => {
    <input id='email' type='email' onChange={handleChange}  placeholder='email' defaultValue={currentUser.email} className='border p-3 rounded-lg'></input>
    <input id='password' type='password'  onChange={handleChange} placeholder='password' className='border p-3 rounded-lg'></input>
    <button disabled = {loading} className='bg-slate-700 text-white rounded-lg p-3 uppercase hover: opacity-95 disabled:opacity-80'>{loading ? 'Loading....' : 'Update'}</button>
+<Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95' to ={'/create-listing'}>Create Listing</Link>
+   
    </form>
-
    <div className='flex justify-between mt-5'>
     <span onClick={handleDeleteUser} className ='text-red-700 cursor-pointer'>Delete Account</span>
     <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>Sign Out</span>
