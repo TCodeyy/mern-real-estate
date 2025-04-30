@@ -1,7 +1,8 @@
 import { React, useState } from 'react';
 import { useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
+import ImagePreviewList from '../components/ImagePreviewsList';
+import { cloudinaryUpload } from '../cloudinary';
 export default function CreateListing() {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
@@ -22,31 +23,52 @@ export default function CreateListing() {
   const [imageUploadError, setImageUploadError] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [uploading, setUploading] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
-  // const handleImageSubmit = (e) => {
-  //     if(files.length >0 && files.length + formData.imageUrls.length < 7){
-  //    const promises = []
-  // for(let i =0; i< files.length; i++){
-  //     promises.push(storeImage(files[i]))
-  // }
-  //     }
-  // }
+  const handleImageSubmit = async () => {
+    if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
+      setUploading(true);
+      setImageUploadError(false);
+      const promises = [];
+      for (let i = 0; i < files.length; i++) {
+        promises.push(storeImage(files[i]));
+      }
 
-  // const handleRemoveImage = ( index) => {
-  //     setFormData({
-  //         ...formData,
-  //         imageUrls: formData.imageUrls.filter((_, i) => i !== index),
-  //     })
-  // }
+      try {
+        const imageUrls = await Promise.all(promises);
+        setFormData((prev) => ({
+          ...prev,
+          imageUrls: [...prev.imageUrls, ...imageUrls],
+        }));
+        setImageUploadError(false);
+        setUploading(false);
+
+        setFiles([]); // reset file input
+      } catch (error) {
+        setImageUploadError('Image upload failed (2 MB max per image)');
+      }
+    } else {
+      setImageUploadError('You can only upload 6 images per listing !');
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveImage = (index) => {
+    setFormData({
+      ...formData,
+      imageUrls: formData.imageUrls.filter((_, i) => i !== index),
+    });
+  };
 
   const storeImage = async (file) => {
-    return new Promise((resolve, reject) => {
-      //handle file upload here
-      // add previews in div along with to delete it right away as well using map
-    });
+    try {
+      const url = await cloudinaryUpload(file);
+      return url;
+    } catch (error) {
+      throw new Error('Image upload failed. Please try again.');
+    }
   };
 
   const handleChange = (e) => {
@@ -277,17 +299,24 @@ export default function CreateListing() {
             />
             <button
               type="button"
+              disabled={uploading}
+              onClick={handleImageSubmit}
               className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80"
             >
-              Upload
+              {uploading ? 'Uploading...' : 'Upload'}
             </button>
           </div>
+          <ImagePreviewList
+            imageUrls={formData.imageUrls}
+            onRemove={handleRemoveImage}
+          />
           <button
             disabled={loading}
             className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled::opacity:80"
           >
             {loading ? 'Creating...' : 'Create Listing'}
           </button>
+          <p className="text-red-700">{imageUploadError && imageUploadError}</p>
           {error && <p className="text-red-700 text-sm">{error}</p>}
         </div>
       </form>

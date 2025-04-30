@@ -13,6 +13,7 @@ import {
   signOutUserFailure,
   signOutUserSuccess,
 } from '../redux/user/userSlice';
+import { cloudinaryUpload } from '../cloudinary.js';
 import { deleteUser } from 'firebase/auth';
 
 export default function Profile() {
@@ -22,6 +23,7 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showListingsError, setShowListingError] = useState(false);
   const [file, setFile] = useState(undefined);
+  const [fileUploadError, setFileUploadError] = useState(null);
   const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
 
@@ -31,8 +33,17 @@ export default function Profile() {
     }
   }, [file]);
 
-  const handleFileUpload = (file) => {
-    // will handle later
+  const handleFileUpload = async (file) => {
+    try {
+      const imageUrl = await cloudinaryUpload(file); // Call from cloudinary.js
+      setFormData((prev) => ({
+        ...prev,
+        avatar: imageUrl,
+      }));
+      setFileUploadError(false);
+    } catch (err) {
+      setFileUploadError(true);
+    }
   };
 
   const handleChange = (e) => {
@@ -139,9 +150,20 @@ export default function Profile() {
         <img
           onClick={() => fileRef.current.click()}
           className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
-          src={currentUser.avatar}
+          src={
+            file
+              ? URL.createObjectURL(file)
+              : formData.avatar || currentUser.avatar
+          }
           alt="profile"
         ></img>
+        <p>
+          {fileUploadError ? (
+            <span className="text-red-700">Error image upload</span>
+          ) : (
+            ''
+          )}
+        </p>
         <input
           id="username"
           type="text"
@@ -212,17 +234,23 @@ export default function Profile() {
           {userListings?.map((listing) => (
             <div
               key={listing._id}
-              className="border rounded-lg p-3 flex justify-between items-center "
+              className="border rounded-lg p-3 flex flex-row justify-evenly items-center "
             >
-              <Link to={`/listing/${listing._id}`}>
-                {/* <img src={''} alit="listing" cover='h-16 w-16 object-contain></img> */}
-              </Link>
-              <Link
-                className="flex-1 text-slate-700 font-semibold  hover:underline truncate"
-                to={`listing/${listing._id}`}
-              >
-                <p>{listing.name}</p>
-              </Link>
+              <div className="flex flex-row ">
+                <Link to={`/listing/${listing._id}`}>
+                  <img
+                    src={listing.imageUrls?.[0]}
+                    alt="listing"
+                    cover="h-16 w-16  "
+                  ></img>
+                </Link>
+                <Link
+                  className="flex-1 text-slate-700 font-semibold  hover:underline truncate"
+                  to={`/listing/${listing._id}`}
+                >
+                  <p>{listing.name}</p>
+                </Link>
+              </div>
               <div className="flex flex-col items-center">
                 <button
                   onClick={() => handleListingDelete(listing._id)}
