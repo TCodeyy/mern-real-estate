@@ -12,6 +12,8 @@ import {
   FaParking,
   FaChair,
 } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
+import Contact from '../components/Contact';
 
 export default function Listing() {
   SwiperCore.use([Navigation]);
@@ -20,6 +22,8 @@ export default function Listing() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
+  const [contact, setContact] = useState(false);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -89,7 +93,7 @@ export default function Listing() {
               Link copied !
             </p>
           )}
-          <div className="flex flex-col max-w-4xl mx-auto p-3 gap-6">
+          <div className="flex flex-col max-w-4xl mx-auto p-3  gap-6">
             <p className="text-2xl font-semibold">
               {listing.name} - ${' '}
               {listing.offer
@@ -97,7 +101,7 @@ export default function Listing() {
                 : listing.regularPrice.toLocaleString('en-US')}
               {listing.type === 'rent' && ' / month'}
             </p>
-            <p className=" flex items-center mt-6 gap-2 text-slate-600 my-2text-sm">
+            <p className=" flex items-center mt-6 gap-2 text-slate-600 my-2 text-sm">
               <FaMapMarkerAlt className="text-green-700" />
               {listing.address}
             </p>
@@ -147,6 +151,15 @@ export default function Listing() {
                 {listing.furnished ? 'Furnished' : 'Unfurnished'}
               </li>
             </ul>
+            {currentUser && listing.userRef !== currentUser._id && !contact && (
+              <button
+                onClick={() => setContact(true)}
+                className="bg-slate-700 text-white text-center p-3 uppercase rounded-lg hover:opacity-95"
+              >
+                Contact Landlord
+              </button>
+            )}
+            {contact && <Contact listing={listing} />}
           </div>
         </div>
       )}
