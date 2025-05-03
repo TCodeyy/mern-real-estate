@@ -121,7 +121,7 @@ export default function Listing() {
                 p-1
                 rounded-md"
                 >
-                  ${listing.regularPrice - listing.discountPrice} discount
+                  ${listing.regularPrice - listing.discountPrice} OFF
                 </p>
               )}
             </div>
