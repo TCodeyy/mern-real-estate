@@ -87,19 +87,30 @@ export const getListings = async (req, res, next) => {
       type = { $in: ['sale', 'rent'] };
     }
 
-    const searchTerm = req.query.searchTerm || '';
-    const sort = req.query.sort || 'createdAt';
+    let bedrooms = req.query.bedrooms;
+    let bathrooms = req.query.bathrooms;
 
-    const order = req.query.order || 'desc';
-
-    const listings = await Listing.find({
+    const queryObject = {
       //i means dont care about upper/lower case
-      name: { $regex: searchTerm, $options: 'i' },
+      name: { $regex: req.query.searchTerm || '', $options: 'i' },
       offer,
       furnished,
       parking,
       type,
-    })
+    };
+
+    if (bedrooms && bedrooms !== '' && bedrooms !== 'undefined') {
+      queryObject.bedrooms = { $gte: parseInt(bedrooms) };
+    }
+
+    if (bathrooms && bathrooms !== '' && bathrooms !== 'undefined') {
+      queryObject.bathrooms = { $gte: parseInt(bathrooms) };
+    }
+
+    const sort = req.query.sort || 'createdAt';
+    const order = req.query.order || 'desc';
+
+    const listings = await Listing.find(queryObject)
       .sort({
         [sort]: order,
       })

@@ -2,6 +2,7 @@ import { FaSearch } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
+import Theme from './theme';
 
 export default function Header() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,9 +29,9 @@ export default function Header() {
     <header className="bg-slate-200 shadow-md">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
         <Link to="/">
-          <h1 className="font=bold text-sm sm:text-xl flex flex-wrap">
-            <span className="text-slate-500"> Real</span>
-            <span className="text-slate-500"> Estate</span>
+          <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
+            <span className="text-slate-500 "> True</span>
+            <span className="text-slate-500 "> VoiceRealtors</span>
           </h1>
         </Link>
         <form
@@ -74,6 +75,7 @@ export default function Header() {
               <li className=" text-slate-700 hover:underline">Sign in</li>
             )}
           </Link>
+          <Theme />
         </ul>
       </div>
     </header>
