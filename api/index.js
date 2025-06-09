@@ -7,7 +7,6 @@ import listingRouter from './routes/listing.route.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 
-
 dotenv.config();
 
 mongoose
@@ -29,8 +28,11 @@ app.listen(3000, () => {
 });
 
 //we are index.js to use these routes when this api is hit
+console.log('Mounting userRouter at /api/user');
 app.use('/api/user', userRouter);
+console.log('Mounting userRouter at /api/auth');
 app.use('/api/auth', authRouter);
+console.log('Mounting userRouter at /api/listing');
 app.use('/api/listing', listingRouter);
 
 app.use(express.static(path.join(__dirname, '/client/dist'))); // if we used create react app , dist would be 'build'
