@@ -15,7 +15,8 @@ export default function About() {
       </p>
       <p className="mb-4 text-slate-700">
         I’m Tanya, a passionate developer who built this app while doing a
-        guided project. Along the way, I tackled complex challenges like
+        guided project. Along the way, I went beyond by adding a web speech
+        recognition feature in which I tackled complex challenges like
         implementing voice search and mastering Tailwind CSS for styling. I’m
         always learning and improving to create better tools for users like you.
       </p>

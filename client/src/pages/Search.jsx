@@ -102,9 +102,7 @@ export default function Search() {
       recognition.current.onstart = () => {
         setListening(true);
         setShowVoiceModal(true);
-        setVoiceFeedback(
-          'Try saying something like "Find 2 bedroom apartments for rent in downtown with parking"'
-        );
+        setVoiceFeedback('Show me 3 bedroom houses for sale with parking"');
       };
 
       recognition.current.onresult = (event) => {

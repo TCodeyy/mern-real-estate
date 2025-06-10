@@ -92,7 +92,7 @@ export default function Home() {
               >
                 Show more offers
               </Link>
-              <div className="flex flex=wrap gap-4">
+              <div className="flex flex-wrap gap-4">
                 {offerListings?.map((listing) => (
                   <ListingCard
                     listing={listing}
@@ -115,7 +115,7 @@ export default function Home() {
               >
                 Show more places for rent
               </Link>
-              <div className="flex flex=wrap gap-4">
+              <div className="flex flex-wrap gap-4">
                 {rentListings?.map((listing) => (
                   <ListingCard
                     listing={listing}
@@ -138,7 +138,7 @@ export default function Home() {
               >
                 Show more places for sale
               </Link>
-              <div className="flex flex=wrap gap-4">
+              <div className="flex flex-wrap gap-4">
                 {saleListings?.map((listing) => (
                   <ListingCard
                     listing={listing}
